@@ -56,10 +56,6 @@ class PQueue {
 };
 
 // To be completed below
-// Constructor
-PQueue::PQueue() {
- 
-}
 // Return number of items in priority queue
 size_t PQueue::Size() {
  return cur_size;
@@ -76,6 +72,19 @@ void PQueue::Pop() {
 void PQueue::Push(const T &item) {
 
 }
+
+  // Helper methods for restructuring
+  void PercolateUp(size_t n) {
+  
+  }
+  void PercolateDown(size_t n) {
+   
+  }
+
+  // Node comparison
+  bool CompareNodes(size_t i, size_t j) {
+   
+  }
 
 
 #endif  // PQUEUE_H_
