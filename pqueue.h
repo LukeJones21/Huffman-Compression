@@ -56,5 +56,26 @@ class PQueue {
 };
 
 // To be completed below
+// Constructor
+PQueue::PQueue() {
+
+}
+// Return number of items in priority queue
+size_t PQueue::Size() {
+
+}
+// Return top of priority queue
+T& PQueue::Top() {
+
+}
+// Remove top of priority queue
+void PQueue::Pop() {
+
+}
+// Insert item and sort priority queue
+void PQueue::Push(const T &item) {
+
+}
+
 
 #endif  // PQUEUE_H_
