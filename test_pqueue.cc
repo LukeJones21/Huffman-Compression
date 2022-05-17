@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <functional>
+#include <iostream>
 
 #include "pqueue.h"
 
@@ -71,21 +72,28 @@ TEST(PQueue, ErrorThrow) {
     EXPECT_EQ(pq.Top(), 5);
 }
 
+class MyClassCompare {
+  public:
+    bool operator()(MyClass* a, MyClass* b) {
+        return a->n() < b->n();
+    }
+};
+
 TEST(PQueue, custom_class_pointer) {
   std::vector<MyClass*> vec{new MyClass(42), new MyClass(23),
                             new MyClass(2), new MyClass(34)};
 
-  PQueue<MyClass*, /* ??? */> pq;
+  PQueue<MyClass*, MyClassCompare> pq;
   pq.Push(vec[0]);
   pq.Push(vec[1]);
   pq.Push(vec[2]);
   pq.Push(vec[3]);
-
   EXPECT_EQ(pq.Top(), vec[2]);
   EXPECT_EQ(pq.Size(), 4);
   pq.Pop();
   EXPECT_EQ(pq.Top(), vec[1]);
 }
+
 
 int main(int argc, char *argv[]) {
     ::testing::InitGoogleTest(&argc, argv);
