@@ -41,7 +41,7 @@ ifs.close();
 std::remove(filename.c_str());
 }
 
-TEST(BStream, InputAndOutput) {
+TEST(BStream, CharInputAndOutput) {
     std::string filename("test_bstream_output");
 
     std::ofstream ofs(filename, std::ios::out |
@@ -49,14 +49,45 @@ TEST(BStream, InputAndOutput) {
                                 std::ios::binary);
     BinaryOutputStream bos(ofs);
     bos.PutChar('A');
-    bos.PutInt(4);
+    bos.PutChar('D');
+    bos.PutChar('L');
+    bos.PutChar('d');
+    bos.PutChar('i');
     ofs.close();
 
     std::ifstream ifs(filename, std::ios::in |
                                 std::ios::binary);
     BinaryInputStream bis(ifs);
     EXPECT_EQ(bis.GetChar(), 'A');
+    EXPECT_EQ(bis.GetChar(), 'D');
+    EXPECT_EQ(bis.GetChar(), 'L');
+    EXPECT_EQ(bis.GetChar(), 'd');
+    EXPECT_EQ(bis.GetChar(), 'i');
+    ifs.close();
+}
+
+TEST(BStream, IntInputAndOutput) {
+        std::string filename("test_bstream_output");
+
+    std::ofstream ofs(filename, std::ios::out |
+                                std::ios::trunc |
+                                std::ios::binary);
+    BinaryOutputStream bos(ofs);
+    bos.PutInt(4);
+    bos.PutInt(932);
+    bos.PutInt(837);
+    bos.PutInt(108);
+    bos.PutInt(98);
+    ofs.close();
+
+    std::ifstream ifs(filename, std::ios::in |
+                                std::ios::binary);
+    BinaryInputStream bis(ifs);
     EXPECT_EQ(bis.GetInt(), 4);
+    EXPECT_EQ(bis.GetInt(), 932);
+    EXPECT_EQ(bis.GetInt(), 837);
+    EXPECT_EQ(bis.GetInt(), 108);
+    EXPECT_EQ(bis.GetInt(), 98);
     ifs.close();
 }
 
