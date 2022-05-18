@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include <functional>
-#include <iostream>
 
 #include "pqueue.h"
 
@@ -72,8 +71,59 @@ TEST(PQueue, ErrorThrow) {
     EXPECT_EQ(pq.Top(), 5);
 }
 
+TEST(PQueue, LongLess) {
+    PQueue<int> pq;
+
+    EXPECT_THROW(pq.Top(), std::exception);
+    pq.Push(1);
+    pq.Push(2);
+    pq.Push(3);
+    pq.Push(4);
+    pq.Push(5);
+    pq.Push(6);
+    pq.Push(7);
+    EXPECT_EQ(pq.Top(), 1);
+    EXPECT_EQ(pq.Size(), 7);
+    pq.Pop();
+    pq.Pop();
+    pq.Pop();
+    EXPECT_EQ(pq.Top(), 4);
+    EXPECT_EQ(pq.Size(), 4);
+    pq.Push(2);
+    EXPECT_EQ(pq.Top(), 2);
+}
+
+TEST(PQueue, character) {
+    PQueue<char> pq;
+
+    pq.Push('C');
+    pq.Push('D');
+    pq.Push('A');
+    pq.Push('F');
+    EXPECT_EQ(pq.Top(), 'A');
+    EXPECT_EQ(pq.Size(), 4);
+    pq.Pop();
+    EXPECT_EQ(pq.Top(), 'C');
+}
+
+TEST(PQueue, character_greater) {
+    PQueue<char, std::greater<char>> pq;
+
+    pq.Push('F');
+    pq.Push('A');
+    pq.Push('G');
+    pq.Push('D');
+    pq.Push('X');
+    pq.Push('Y');
+    EXPECT_EQ(pq.Top(), 'Y');
+    EXPECT_EQ(pq.Size(), 6);
+    pq.Pop();
+    EXPECT_EQ(pq.Top(), 'X');
+    EXPECT_EQ(pq.Size(), 5);
+}
+
 class MyClassCompare {
-  public:
+public:
     bool operator()(MyClass* a, MyClass* b) {
         return a->n() < b->n();
     }
@@ -88,12 +138,12 @@ TEST(PQueue, custom_class_pointer) {
   pq.Push(vec[1]);
   pq.Push(vec[2]);
   pq.Push(vec[3]);
+
   EXPECT_EQ(pq.Top(), vec[2]);
   EXPECT_EQ(pq.Size(), 4);
   pq.Pop();
   EXPECT_EQ(pq.Top(), vec[1]);
 }
-
 
 int main(int argc, char *argv[]) {
     ::testing::InitGoogleTest(&argc, argv);
