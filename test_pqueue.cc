@@ -5,31 +5,31 @@
 #include "pqueue.h"
 
 TEST(PQueue, less) {
-PQueue<int> pq;
+    PQueue<int> pq;
 
-pq.Push(42);
-pq.Push(23);
-pq.Push(2);
-pq.Push(34);
+    pq.Push(42);
+    pq.Push(23);
+    pq.Push(2);
+    pq.Push(34);
 
-EXPECT_EQ(pq.Top(), 2);
-EXPECT_EQ(pq.Size(), 4);
-pq.Pop();
-EXPECT_EQ(pq.Top(), 23);
+    EXPECT_EQ(pq.Top(), 2);
+    EXPECT_EQ(pq.Size(), 4);
+    pq.Pop();
+    EXPECT_EQ(pq.Top(), 23);
 }
 
 TEST(PQueue, great) {
-PQueue<int, std::greater<int>> pq;
+    PQueue<int, std::greater<int>> pq;
 
-pq.Push(42);
-pq.Push(23);
-pq.Push(2);
-pq.Push(34);
+    pq.Push(42);
+    pq.Push(23);
+    pq.Push(2);
+    pq.Push(34);
 
-EXPECT_EQ(pq.Top(), 42);
-EXPECT_EQ(pq.Size(), 4);
-pq.Pop();
-EXPECT_EQ(pq.Top(), 34);
+    EXPECT_EQ(pq.Top(), 42);
+    EXPECT_EQ(pq.Size(), 4);
+    pq.Pop();
+    EXPECT_EQ(pq.Top(), 34);
 }
 
 class MyClass {
@@ -42,18 +42,18 @@ private:
 };
 
 TEST(PQueue, custom_class) {
-std::vector<MyClass> vec{MyClass(42), MyClass(23), MyClass(2), MyClass(34)};
+    std::vector<MyClass> vec{MyClass(42), MyClass(23), MyClass(2), MyClass(34)};
 
-PQueue<MyClass> pq;
-pq.Push(vec[0]);
-pq.Push(vec[1]);
-pq.Push(vec[2]);
-pq.Push(vec[3]);
+    PQueue<MyClass> pq;
+    pq.Push(vec[0]);
+    pq.Push(vec[1]);
+    pq.Push(vec[2]);
+    pq.Push(vec[3]);
 
-EXPECT_EQ(pq.Top().n(), vec[2].n());
-EXPECT_EQ(pq.Size(), 4);
-pq.Pop();
-EXPECT_EQ(pq.Top().n(), vec[1].n());
+    EXPECT_EQ(pq.Top().n(), vec[2].n());
+    EXPECT_EQ(pq.Size(), 4);
+    pq.Pop();
+    EXPECT_EQ(pq.Top().n(), vec[1].n());
 }
 
 TEST(PQueue, ErrorThrow) {
@@ -120,6 +120,42 @@ TEST(PQueue, character_greater) {
     pq.Pop();
     EXPECT_EQ(pq.Top(), 'X');
     EXPECT_EQ(pq.Size(), 5);
+}
+
+TEST(PQueue, double_less) {
+    PQueue<double> pq;
+
+    for (int i = 0; i < 50; i++)
+        pq.Push(i * 2.3);
+    
+    EXPECT_EQ(pq.Top(), 0);
+    EXPECT_EQ(pq.Size(), 50);
+    pq.Pop();
+    EXPECT_EQ(pq.Top(), 2.3);
+    EXPECT_EQ(pq.Size(), 49);
+    for (int i = 0; i < 49; i++)
+        pq.Pop();
+    EXPECT_THROW(pq.Top(), std::exception);
+    EXPECT_EQ(pq.Size(), 0);
+}
+
+TEST(PQueue, large_capacity) {
+    PQueue<int> pq;
+
+    for (int i = 0; i < 10000; i++) 
+        pq.Push(i * 2);
+    
+    EXPECT_EQ(pq.Size(), 10000);
+    EXPECT_EQ(pq.Top(), 0);
+    pq.Pop();
+    EXPECT_EQ(pq.Top(), 2);
+
+    for (int i = 0; i < 9000; i++)
+        pq.Pop();
+
+    EXPECT_EQ(pq.Top(), 18002);
+    EXPECT_EQ(pq.Size(), 999);
+
 }
 
 class MyClassCompare {
