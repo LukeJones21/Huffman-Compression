@@ -127,9 +127,6 @@ void Huffman::PreorderRecur(HuffmanNode *n, BinaryOutputStream& bos,
         bos.PutBit(true);
         // Followed by the char value
         bos.PutChar(n->data());
-        // If the root is a leaf node make the code "0"
-        if (bits.empty())
-            bits += "0";
         // Insert the chars new bit code into the code table
         code_table.insert(std::pair<char, std::string>(n->data(), bits));
         // delete the current leaf node
@@ -157,13 +154,18 @@ void Huffman::Decompress(std::ifstream &ifs, std::ofstream &ofs) {
     int freq = bis.GetInt();
     // Read file until no more chars left
     for (int i = 0; i < freq; i++) {
-      std::string bits;
+      std::string bits = "";
       // Find whether the current bit string is in code table
       auto itr = code_table.find(bits);
       // Keep adding to bit string until string matches element in code table
       while (itr == code_table.end()) {
-        // Get next bit from input file
-        bool bit = bis.GetBit();
+        bool bit;
+        // Attempt to get next bit from input file
+        try {
+            bit = bis.GetBit();
+        } // If fail then only one char in code table
+        catch (std::underflow_error) { }
+        
         if (bit == 0)
           bits += "0";
         else
