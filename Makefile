@@ -14,4 +14,4 @@ test_bstream: test_bstream.cc bstream.h
 
 clean:
 	rm -f unzap zap test_pqueue test_bstream
-	rm -f *.zap
+	rm -f *.zap *.unzap
