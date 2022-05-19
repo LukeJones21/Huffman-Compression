@@ -41,7 +41,7 @@ bool BinaryInputStream::GetBit() {
     avail--;
     bit = ((buffer >> avail) & 1) == 1;
 
-#if 1  // Switch to 1 for debug purposes
+#if 0  // Switch to 1 for debug purposes
     if (bit)
     std::cout << '1' << std::endl;
   else
@@ -53,7 +53,7 @@ bool BinaryInputStream::GetBit() {
 
 char BinaryInputStream::GetChar() {
     char c = 0;
-    for (int i = CHAR_BIT - 1; i >= 0; i--) {
+    for (int i = 8 - 1; i >= 0; i--) {
         c = ((c << 1) | GetBit());
     }
 
@@ -62,7 +62,7 @@ char BinaryInputStream::GetChar() {
 
 int BinaryInputStream::GetInt() {
     int c = 0;
-    for (int i = ((sizeof(int) * 8) - 1); i >= 0; i--) {
+    for (unsigned int i = (sizeof(int) * 8); i > 0; i--) {
         c = ((c << 1) | GetBit());
     }
     return c;
@@ -127,24 +127,25 @@ void BinaryOutputStream::PutBit(bool bit) {
 }
 
 void BinaryOutputStream::PutChar(char byte) {
-    bool a[CHAR_BIT];
-    for (int i = 0; i < CHAR_BIT; i++) {
+    bool a[8];
+
+    for (int i = 0; i < 8; i++) {
         a[i] = byte & 1;
         byte = byte >> 1;
     }
-    for (int i = CHAR_BIT - 1; i >= 0; i--) {
+
+    for (int i = 8 - 1; i >= 0; i--) 
         PutBit(a[i]);
-    }
 }
 
 void BinaryOutputStream::PutInt(int word) {
     bool a[sizeof(int)*8];
-    for (int i = 0; i < (sizeof(int)*8); i++) {
+    for (unsigned int i = 0; i < (sizeof(int)*8); i++) {
         a[i] = word & 1;
         word = word >> 1;
     }
-    for (int i = (sizeof(int)*8) - 1; i >= 0; i--){
-        PutBit(a[i]);
+    for (unsigned int i = (sizeof(int)*8); i > 0; i--){
+        PutBit(a[i-1]);
     }
 }
 
