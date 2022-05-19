@@ -74,6 +74,8 @@ void Huffman::Compress(std::ifstream &ifs, std::ofstream &ofs) {
         if (chars[i] != 0)
             pq.Push(HuffmanNode(i, chars[i]));
     }
+    if (pq.Size() == 0)
+        return;
     // Create Huffman Tree
     while (pq.Size() > 1) {
         // Create Huffman Node out of the top of the priority queue
@@ -96,6 +98,7 @@ void Huffman::Compress(std::ifstream &ifs, std::ofstream &ofs) {
                                         pq.Top().left(), pq.Top().right());
     // Traverse the entire Huffman Tree
     PreorderRecur(root, bos, "", code_table);
+        
     // Put total number of characters in input file in output file
     bos.PutInt(pq.Top().freq());
     // Reset input file to read again
@@ -106,12 +109,13 @@ void Huffman::Compress(std::ifstream &ifs, std::ofstream &ofs) {
         // Get new bit value of char from code table
         std::string temp = code_table.at(c);
         // Place each bit into output file
-        for (int i = 0; i < temp.length(); i++) {
+        for (unsigned int i = 0; i < temp.length(); i++) {
             if (temp[i] == '0')
                 bos.PutBit(0);
             else 
                 bos.PutBit(1);
         }
+        
     }
 }
 
@@ -123,6 +127,9 @@ void Huffman::PreorderRecur(HuffmanNode *n, BinaryOutputStream& bos,
         bos.PutBit(true);
         // Followed by the char value
         bos.PutChar(n->data());
+        // If the root is a leaf node make the code "0"
+        if (bits.empty())
+            bits += "0";
         // Insert the chars new bit code into the code table
         code_table.insert(std::pair<char, std::string>(n->data(), bits));
         // delete the current leaf node
@@ -174,8 +181,16 @@ void Huffman::Decompress(std::ifstream &ifs, std::ofstream &ofs) {
 
 void Huffman::BuildCodeTable(BinaryInputStream& bis, std::map<std::string, char>& code_table) {
     HuffmanNode root(0,0);
-    // Get first bit of input file
-    bool first_bit = bis.GetBit();
+    bool first_bit;
+    
+    try {
+        // Get first bit of input file
+        first_bit = bis.GetBit();
+    } catch(std::underflow_error) {
+        // If empty file
+        exit(0);
+    }
+    
     // if the first bit is a 1
     if (first_bit == 1) {
         // Get the following char value
