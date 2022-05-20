@@ -42,7 +42,7 @@ bool BinaryInputStream::GetBit() {
     bit = ((buffer >> avail) & 1) == 1;
 
 #if 0  // Switch to 1 for debug purposes
-    if (bit)
+  if (bit)
     std::cout << '1' << std::endl;
   else
     std::cout << '0' << std::endl;
@@ -69,7 +69,7 @@ int BinaryInputStream::GetInt() {
 }
 
 class BinaryOutputStream {
-public:
+  public:
     explicit BinaryOutputStream(std::ofstream &ofs);
     ~BinaryOutputStream();
 
@@ -79,7 +79,7 @@ public:
     void PutChar(char byte);
     void PutInt(int word);
 
-private:
+  private:
     std::ofstream &ofs;
     char buffer = 0;
     size_t count = 0;
@@ -144,7 +144,7 @@ void BinaryOutputStream::PutInt(int word) {
         a[i] = word & 1;
         word = word >> 1;
     }
-    for (unsigned int i = (sizeof(int)*8); i > 0; i--){
+    for (unsigned int i = (sizeof(int)*8); i > 0; i--) {
         PutBit(a[i-1]);
     }
 }

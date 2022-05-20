@@ -6,7 +6,7 @@
 #include <functional>
 #include <vector>
 
-template <typename T, typename C = std::less<T>>
+template <typename T, typename C = std::less<T> >
 class PQueue {
 public:
     // Constructor
@@ -101,10 +101,12 @@ void PQueue<T,C>::PercolateDown(size_t n) {
     while (IsNode(LeftChild(n))) {
         // Consider left child by default
         size_t child = LeftChild(n);
-        // If right child exists and smaller than left child, then consider right child
+        // If right child exists and smaller 
+        // than left child, then consider right child
         if (IsNode(RightChild(n)) && CompareNodes(RightChild(n), LeftChild(n)))
             child = RightChild(n);
-        // Exchange the smallest child with node to restore heap-order if necessary
+        // Exchange the smallest child with node 
+        // to restore heap-order if necessary
         if (CompareNodes(child, n))
             std::swap(items[child], items[n]);
         else

@@ -46,18 +46,26 @@ private:
 };
 
 class Huffman {
-public:
+  public:
     static void Compress(std::ifstream &ifs, std::ofstream &ofs);
 
     static void Decompress(std::ifstream &ifs, std::ofstream &ofs);
 
-private:
+  private:
     // Helper methods...
-    static void PreorderRecur(HuffmanNode *n, BinaryOutputStream& bos, std::string bits, std::map<char, std::string>& code_table);
+    static void PreorderRecur(HuffmanNode *n, 
+                              BinaryOutputStream& bos, 
+                              std::string bits, std::map<char, 
+                              std::string>& code_table);
 
-    static void BuildCodeTable(BinaryInputStream& bis, std::map<std::string, char>& code_table);
-    static void BuildCodeTableHelper(HuffmanNode* node, BinaryInputStream& bis,
-                                    std::string bits, std::map<std::string, char>& code_table);
+    static void BuildCodeTable(BinaryInputStream& bis, 
+                               std::map<std::string, 
+                               char>& code_table);
+    static void BuildCodeTableHelper(HuffmanNode* node, 
+                                BinaryInputStream& bis,
+                                std::string bits, 
+                                std::map<std::string, 
+                                char>& code_table);
 };
 
 void Huffman::Compress(std::ifstream &ifs, std::ofstream &ofs) {
@@ -182,7 +190,7 @@ void Huffman::Decompress(std::ifstream &ifs, std::ofstream &ofs) {
 
 
 void Huffman::BuildCodeTable(BinaryInputStream& bis, std::map<std::string, char>& code_table) {
-    HuffmanNode root(0,0);
+    HuffmanNode* root = new HuffmanNode(0,0);
     bool first_bit;
     
     try {
@@ -203,7 +211,7 @@ void Huffman::BuildCodeTable(BinaryInputStream& bis, std::map<std::string, char>
     }
     // If the first bit is a 0
     // Build the rest of the Huffman tree
-    BuildCodeTableHelper (&root, bis, "", code_table);
+    BuildCodeTableHelper (root, bis, "", code_table);
 }
 
 void Huffman::BuildCodeTableHelper(HuffmanNode* node, BinaryInputStream& bis,
@@ -217,6 +225,8 @@ void Huffman::BuildCodeTableHelper(HuffmanNode* node, BinaryInputStream& bis,
         delete node;
         return;
     }
+    // Reset node to give new children
+    delete node;
     // Get the next bit in the input file
     bool bit = bis.GetBit();
     if (bit == 0) {
@@ -226,7 +236,7 @@ void Huffman::BuildCodeTableHelper(HuffmanNode* node, BinaryInputStream& bis,
         // Make current node's left child a leaf node
         node = new HuffmanNode(0, 0, new HuffmanNode(bis.GetChar(), 0), node->right());
     }
-    // Recurse on the newly created left 
+    // Recurse on the newly created left
     // Huffman Node adding a "0" to bit string
     BuildCodeTableHelper(node->left(), bis, bits + "0", code_table);
     // After traversing entire left subtree, delete current node
@@ -236,10 +246,11 @@ void Huffman::BuildCodeTableHelper(HuffmanNode* node, BinaryInputStream& bis,
     bit = bis.GetBit();
     if (bit == 0) {
         // Make current node's right child an internal Huffman Node
-        node = new HuffmanNode(0,0, nullptr, new HuffmanNode(0,0));
+        node = new HuffmanNode(0, 0, nullptr, new HuffmanNode(0, 0));
     } else {
         // Make current node's right child a leaf node
-        node = new HuffmanNode(0, 0, node->left(), new HuffmanNode(bis.GetChar(), 0));
+        node = new HuffmanNode(0, 0, node->left(), 
+                                new HuffmanNode(bis.GetChar(), 0));
     }
     // Recurse on the newly created right
     // Huffman node adding a "1" to bit string
