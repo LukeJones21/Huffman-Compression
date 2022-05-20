@@ -41,6 +41,26 @@ ifs.close();
 std::remove(filename.c_str());
 }
 
+
+TEST(BStream, InputAndOutput) {
+    std::string filename("test_bstream_output");
+
+    std::ofstream ofs(filename, std::ios::out |
+                                std::ios::trunc |
+                                std::ios::binary);
+    BinaryOutputStream bos(ofs);
+    bos.PutChar('A');
+    bos.PutInt(4);
+    ofs.close();
+
+    std::ifstream ifs(filename, std::ios::in |
+                                std::ios::binary);
+    BinaryInputStream bis(ifs);
+    EXPECT_EQ(bis.GetChar(), 'A');
+    EXPECT_EQ(bis.GetInt(), 4);
+    ifs.close();
+}
+
 TEST(BStream, CharInputAndOutput) {
     std::string filename("test_bstream_output");
 
