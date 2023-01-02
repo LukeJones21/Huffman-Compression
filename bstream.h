@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <fstream>
 #include <iostream>
-// change
+
 class BinaryInputStream {
 public:
     explicit BinaryInputStream(std::ifstream &ifs);
