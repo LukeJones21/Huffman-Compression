@@ -172,7 +172,7 @@ void Huffman::Decompress(std::ifstream &ifs, std::ofstream &ofs) {
         try {
             bit = bis.GetBit();
         } // If fail then only one char in code table
-        catch (std::underflow_error) { }
+        catch (std::underflow_error const&) { }
         
         if (bit == 0)
           bits += "0";
@@ -196,7 +196,7 @@ void Huffman::BuildCodeTable(BinaryInputStream& bis, std::map<std::string, char>
     try {
         // Get first bit of input file
         first_bit = bis.GetBit();
-    } catch(std::underflow_error) {
+    } catch(std::underflow_error const&) {
         // If empty file
         exit(0);
     }
